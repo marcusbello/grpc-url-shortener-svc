@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "/proto";
+
+service ShortenerSvc {
+  rpc Add(AddRequest) returns (AddResponse);
+
+  rpc Show(ShowRequest) returns (ShowResponse);
+
+  rpc GetUrl(GetUrlRequest) returns (GetUrlResponse);
+
+  rpc List(ListRequest) returns (ListResponse);
+
+  rpc Update(UpdateRequest) returns (UpdateResponse);
+
+  rpc Remove(RemoveRequest) returns (RemoveResponse);
+
+}
+
+
+message AddRequest {
+  string url = 1;
+}
+
+message AddResponse {
+  string shorturl = 1;
+}
+
+message ShowRequest {
+  string id = 1;
+}
+
+message ShowResponse {
+  string id = 1;
+  string url = 2;
+  string shortcode = 3;
+  string createdAt = 4;
+  string createdBy = 5;
+}
+
+message GetUrlRequest {
+  string shortCode = 1;
+}
+
+message GetUrlResponse {
+  string url = 1;
+}
+
+message ShortUrl {
+  string id = 1;
+  string url = 2;
+  string shortCode = 3;
+  string createdAt = 4;
+  string createdBy = 5;
+}
+
+message ListRequest {
+}
+
+message ListResponse {
+  repeated ShortUrl all = 1;
+}
+
+message UpdateRequest {
+  string id = 1;
+}
+
+
+message UpdateResponse {
+  string id = 1;
+  string url = 2;
+  string shortCode = 3;
+  string createdAt = 4;
+  string createdBy = 5;
+}
+
+message RemoveRequest {
+  string id = 1;
+}
+
+message RemoveNotFoundError {
+  // Message of error
+  string message_ = 1;
+  // ID of missing contact
+  string id = 2;
+}
+
+message RemoveResponse {
+  string status = 1;
+}
+
+message IDNotFoundError {
+  // Message of error
+  string message_ = 1;
+  // ID of missing contact
+  string id = 2;
+}
+
+message CodeNotFoundError {
+  // Message of error
+  string message_ = 1;
+  // ID of missing contact
+  string id = 2;
+}
