@@ -5,23 +5,48 @@ import (
 	"flag"
 	"fmt"
 	"google.golang.org/grpc"
+	"grpc-url-shortener-svc/db"
+	"grpc-url-shortener-svc/model"
 	pb "grpc-url-shortener-svc/proto"
 	"log"
 	"net"
+	"time"
 )
 
 var (
-	port = flag.Int("port", 50052, "The server port")
+	port  = flag.Int("port", 50052, "The server port")
+	dbURL = "postgres://postgres:postgres@db:5432/postgres?sslmode=disable"
 )
 
 type server struct {
 	pb.UnimplementedShortenerSvcServer
+	db *db.PGData
 }
 
 func (s *server) Add(ctx context.Context, in *pb.AddRequest) (*pb.AddResponse, error) {
-	url := in.Url
-	log.Printf("Shortener.Add >> RECEIVED: %s", url)
-	response := &pb.AddResponse{ShortUrl: url}
+
+	// Random user for now
+	createdBy := "Marcus"
+
+	//Get ShortCode from shortid package
+	shortCode, err := s.db.GenShortCode()
+	if err != nil {
+		return nil, err
+	}
+
+	//Create store for AddRequest
+	data := &model.AddRequest{
+		Url:       in.Url,
+		ShortCode: shortCode,
+		CreatedBy: createdBy,
+		CreatedAt: time.Now(),
+	}
+	log.Printf("Shortener.Add >> RECEIVED: %s", data)
+	err = s.db.Add(ctx, data)
+	if err != nil {
+		return nil, err
+	}
+	response := &pb.AddResponse{ShortUrl: data.ShortCode}
 	return response, nil
 }
 
@@ -53,8 +78,12 @@ func (s *server) Remove(ctx context.Context, in *pb.RemoveRequest) (*pb.RemoveRe
 func main() {
 	flag.Parse()
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
+	pgData, err := db.NewPGRepo(dbURL)
+	if err != nil {
+		log.Fatalf("Failed to connect DB : %v", err)
+	}
 
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
@@ -62,7 +91,7 @@ func main() {
 	var opts []grpc.ServerOption
 
 	s := grpc.NewServer(opts...)
-	pb.RegisterShortenerSvcServer(s, &server{})
+	pb.RegisterShortenerSvcServer(s, &server{db: pgData})
 	log.Printf("server listening on %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %s", err)
