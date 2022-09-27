@@ -1,4 +1,6 @@
 
+run:
+	go run ./server port 50052
 
-gen-rpc:
+gen:
 	protoc -I proto/ proto/service.proto --go_out=. --go-grpc_out=.

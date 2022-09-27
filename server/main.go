@@ -19,8 +19,10 @@ type server struct {
 }
 
 func (s *server) Add(ctx context.Context, in *pb.AddRequest) (*pb.AddResponse, error) {
-
-	return &pb.AddResponse{}, nil
+	url := in.Url
+	log.Printf("Shortener.Add >> RECEIVED: %s", url)
+	response := &pb.AddResponse{ShortUrl: url}
+	return response, nil
 }
 
 func (s *server) Show(ctx context.Context, in *pb.ShowRequest) (*pb.ShowResponse, error) {

@@ -25,7 +25,7 @@ message AddRequest {
 }
 
 message AddResponse {
-  string shorturl = 1;
+  string shortUrl = 1;
 }
 
 message ShowRequest {
@@ -35,7 +35,7 @@ message ShowRequest {
 message ShowResponse {
   string id = 1;
   string url = 2;
-  string shortcode = 3;
+  string shortCode = 3;
   string createdAt = 4;
   string createdBy = 5;
 }
@@ -102,5 +102,5 @@ message CodeNotFoundError {
   // Message of error
   string message_ = 1;
   // ID of missing contact
-  string id = 2;
+  string shortCode = 2;
 }
