@@ -14,8 +14,9 @@ import (
 )
 
 var (
-	port  = flag.Int("port", 50052, "The server port")
-	dbURL = "postgres://postgres:postgres@db:5432/postgres?sslmode=disable"
+	port        = flag.Int("port", 50052, "The server port")
+	dbURL       = "postgres://postgres:postgres@db:5432/postgres?sslmode=disable"
+	goerBaseUrl = "https://goer.ng"
 )
 
 type server struct {
@@ -38,6 +39,7 @@ func (s *server) Add(ctx context.Context, in *pb.AddRequest) (*pb.AddResponse, e
 	data := &model.AddRequest{
 		Url:       in.Url,
 		ShortCode: shortCode,
+		GoerUrl:   fmt.Sprintf("%s%s", goerBaseUrl, shortCode),
 		CreatedBy: createdBy,
 		CreatedAt: time.Now(),
 	}
@@ -51,8 +53,8 @@ func (s *server) Add(ctx context.Context, in *pb.AddRequest) (*pb.AddResponse, e
 }
 
 func (s *server) Show(ctx context.Context, in *pb.ShowRequest) (*pb.ShowResponse, error) {
-
-	return &pb.ShowResponse{}, nil
+	res := &pb.ShowResponse{}
+	return res, nil
 }
 
 func (s *server) GetUrl(ctx context.Context, in *pb.GetUrlRequest) (*pb.GetUrlResponse, error) {

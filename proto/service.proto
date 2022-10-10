@@ -36,8 +36,9 @@ message ShowResponse {
   string id = 1;
   string url = 2;
   string shortCode = 3;
-  string createdBy = 4;
-  string createdAt = 5;
+  string goerUrl = 4;
+  string createdBy = 5;
+  string createdAt = 6;
 }
 
 message GetUrlRequest {
@@ -52,8 +53,9 @@ message ShortUrl {
   string id = 1;
   string url = 2;
   string shortCode = 3;
-  string createdBy = 4;
-  string createdAt = 5;
+  string goerUrl = 4;
+  string createdBy = 5;
+  string createdAt = 6;
 }
 
 message ListRequest {
@@ -72,8 +74,9 @@ message UpdateResponse {
   string id = 1;
   string url = 2;
   string shortCode = 3;
-  string createdBy = 4;
-  string createdAt = 5;
+  string goerUrl = 4;
+  string createdBy = 5;
+  string createdAt = 6;
 }
 
 message RemoveRequest {
